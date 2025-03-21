@@ -1,38 +1,34 @@
-import React, { useEffect, useState } from 'react';
-import {
-  ClockCircleOutlined
-} from '@ant-design/icons';
-import type { MenuProps } from 'antd';
-import { Layout, Menu, theme } from 'antd';
-import { BrowserRouter, Route, Routes } from "react-router";
-import Timers from './page/Timers';
-const { Header, Content, Footer, Sider } = Layout;
+import React, { useState } from 'react'
+import { ClockCircleOutlined } from '@ant-design/icons'
+import type { MenuProps } from 'antd'
+import { Layout, Menu, theme } from 'antd'
+import { BrowserRouter, Route, Routes } from 'react-router'
+import Timers from './page/Timers'
+const { Header, Content, Footer, Sider } = Layout
 
-type MenuItem = Required<MenuProps>['items'][number];
+type MenuItem = Required<MenuProps>['items'][number]
 
 function getItem(
   label: React.ReactNode,
   key: React.Key,
   icon?: React.ReactNode,
-  children?: MenuItem[],
+  children?: MenuItem[]
 ): MenuItem {
   return {
     key,
     icon,
     children,
-    label,
-  } as MenuItem;
+    label
+  } as MenuItem
 }
 
-const items: MenuItem[] = [
-  getItem('Timer', '1', <ClockCircleOutlined />),
-];
+const items: MenuItem[] = [getItem('Timer', '1', <ClockCircleOutlined />)]
 
 const App: React.FC = () => {
-  const [collapsed, setCollapsed] = useState(true);
+  const [collapsed, setCollapsed] = useState(true)
   const {
-    token: { colorBgContainer, borderRadiusLG },
-  } = theme.useToken();
+    token: { colorBgContainer, borderRadiusLG }
+  } = theme.useToken()
 
   return (
     <Layout style={{ minHeight: '100vh', width: '100vw' }}>
@@ -48,7 +44,7 @@ const App: React.FC = () => {
               padding: 24,
               minHeight: 360,
               background: colorBgContainer,
-              borderRadius: borderRadiusLG,
+              borderRadius: borderRadiusLG
             }}
           >
             <BrowserRouter>
@@ -58,12 +54,10 @@ const App: React.FC = () => {
             </BrowserRouter>
           </div>
         </Content>
-        <Footer style={{ textAlign: 'center' }}>
-          Tomato2
-        </Footer>
+        <Footer style={{ textAlign: 'center' }}>Tomato2</Footer>
       </Layout>
     </Layout>
-  );
-};
+  )
+}
 
-export default App;
+export default App
