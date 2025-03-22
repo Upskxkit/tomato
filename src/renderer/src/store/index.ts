@@ -25,7 +25,7 @@ export const useTimersStore = create<TimersState>((set) => ({
   setTimers: (timers: Timer[]) => set(() => ({ timers: timers })),
   updateTimer: (timer: Timer) =>
     set((state) => ({ timers: state.timers.map((item) => (item.id === timer.id ? timer : item)) })),
-  addTimer: (timer: Timer) => set((state) => ({ timers: [...state.timers, timer] })),
+  addTimer: (timer: Timer) => set((state) => ({ timers: [...state.timers, { ...timer, id: Date.now().toString() }] })),
   deleteTimer: (timer: Timer) =>
     set((state) => ({ timers: state.timers.filter((item) => item.id !== timer.id) }))
 }))

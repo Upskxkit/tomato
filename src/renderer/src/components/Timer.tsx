@@ -32,10 +32,10 @@ export const Timer = (props: TimerProps) => {
       timer.current = setInterval(() => {
         setTimeLeft((prev) => (prev < 1 ? 0 : prev - 1))
       }, 1000)
+    }
 
-      return () => {
-        if (timer.current) clearInterval(timer.current)
-      }
+    return () => {
+      if (timer.current) clearInterval(timer.current)
     }
   }, [play])
 
@@ -49,7 +49,7 @@ export const Timer = (props: TimerProps) => {
       clearInterval(timer.current)
       setIsRunning(false)
       setPlay(false)
-      props.onTimeOut && props.onTimeOut()
+      props.onTimeOut?.()
     }
   }, [timeLeft, props.timer.time_in_sec])
 
@@ -65,7 +65,7 @@ export const Timer = (props: TimerProps) => {
         title={props.timer.title}
         extra={<a href="#">More</a>}
         actions={[
-          <Tooltip title="search">
+          <Tooltip key="btn-search" title="search">
             <Button
               type="primary"
               shape="circle"
@@ -79,7 +79,7 @@ export const Timer = (props: TimerProps) => {
               }}
             />
           </Tooltip>,
-          <Tooltip title="reset">
+          <Tooltip key="btn-reset" title="reset">
             <Button
               disabled={!isRunning}
               type="primary"
@@ -121,7 +121,7 @@ export const Timer = (props: TimerProps) => {
           if (event.key === 'edit') {
             timerModalOpen(props.timer)
           } else if (event.key === 'delete') {
-            props.onDelete && props.onDelete(props.timer)
+            props.onDelete?.(props.timer)
           }
         }}
         onClose={() => setPopup({ visible: false, x: 0, y: 0 })}

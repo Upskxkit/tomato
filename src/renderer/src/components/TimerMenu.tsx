@@ -1,9 +1,8 @@
 import { DeleteOutlined, EditOutlined } from '@ant-design/icons'
-
-import './TimerMenu.css'
 import { Menu } from 'antd'
-import { useEffect, useRef } from 'react'
 import { MenuClickEventHandler } from 'rc-menu/lib/interface'
+import { useEffect, useRef } from 'react'
+import './TimerMenu.css'
 
 interface TimerProps {
   visible: boolean
@@ -19,8 +18,8 @@ export const TimerPopup = ({
   x,
   y,
   isRunning,
-  onClose = () => {},
-  onClick = () => {}
+  onClose = () => { },
+  onClick = () => { }
 }: TimerProps) => {
   const items = [
     {
@@ -37,18 +36,18 @@ export const TimerPopup = ({
   ]
   const menuRef = useRef<HTMLDivElement | null>(null)
 
-  const handleClickOutside = (event: MouseEvent): void => {
-    if (menuRef.current && !menuRef.current.contains(event.target as Element)) {
-      onClose()
-    }
-  }
-
   useEffect(() => {
+    const handleClickOutside = (event: MouseEvent): void => {
+      if (menuRef.current && !menuRef.current.contains(event.target as Element)) {
+        onClose()
+      }
+    }
+
     document.addEventListener('click', handleClickOutside)
     return () => {
       document.removeEventListener('click', handleClickOutside)
     }
-  }, [])
+  }, [onClose])
 
   if (!visible) {
     return null

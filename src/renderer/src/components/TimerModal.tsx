@@ -16,12 +16,11 @@ interface TimerModalProps {
 const TimerModal = ({
   open,
   onCancel,
-  onChange = () => {},
-  onDelete = () => {},
+  onChange = () => { },
+  onDelete = () => { },
   timer,
   mode
 }: TimerModalProps) => {
-  console.log(timer, mode)
   const [title, setTitle] = useState(timer.title)
   const [time, setTime] = useState(() => {
     const [hours, minutes, seconds] = formatTime(timer.time_in_sec).split(':').map(Number)

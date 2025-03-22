@@ -1,12 +1,13 @@
-import { Col, Empty, FloatButton, Row } from 'antd'
-import { Timer } from '../components/Timer'
-import { useTimerModalStore, useTimersStore } from '../store'
 import { PlusOutlined } from '@ant-design/icons'
-import TimerModal from '../components/TimerModal'
-import { notify } from '../helpers/notify'
+import TimerModal from '@renderer/components/TimerModal'
+import { notify } from '@renderer/helpers/notify'
+import { useTimerModalStore, useTimersStore } from '@renderer/store'
+import { Col, Empty, FloatButton, Row } from 'antd'
+import { Timer } from '@renderer/components/Timer'
 
 export default function Timers() {
   const timers = useTimersStore((state) => state.timers)
+  const addTimer = useTimersStore((state) => state.addTimer)
   const updateTimer = useTimersStore((state) => state.updateTimer)
   const deleteTimer = useTimersStore((state) => state.deleteTimer)
 
@@ -27,10 +28,9 @@ export default function Timers() {
       ) : (
         <Row gutter={{ xs: 8, sm: 16, md: 24, lg: 32 }}>
           {timers.map((timer) => (
-            <Col className="gutter-row" span={8}>
+            <Col className="gutter-row" span={8} key={timer.id}>
               <Timer
                 timer={timer}
-                key={timer.id}
                 onChange={updateTimer}
                 onDelete={deleteTimer}
                 onTimeOut={() => {
@@ -51,11 +51,19 @@ export default function Timers() {
           mode={timerModalMode}
           timer={timerModalTimer}
           onCancel={timerModalClose}
-          onChange={(updatedTimer) => {
-            updateTimer(updatedTimer)
+          onChange={(timerData) => {
+            if (timerModalMode == 'create') {
+              addTimer(timerData)
+            } else {
+              updateTimer(timerData)
+            }
+
             timerModalClose()
           }}
-          onDelete={deleteTimer}
+          onDelete={(timeData) => {
+            deleteTimer(timeData)
+            timerModalClose()
+          }}
         />
       ) : null}
     </>
