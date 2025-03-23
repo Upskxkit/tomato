@@ -26,9 +26,9 @@ export default function Timers() {
           </Col>
         </Row>
       ) : (
-        <Row gutter={{ xs: 8, sm: 16, md: 24, lg: 32 }}>
+        <Row gutter={[{ xs: 8, sm: 16, md: 24, lg: 32 }, 8]}>
           {timers.map((timer) => (
-            <Col className="gutter-row" span={8} key={timer.id}>
+            <Col className="gutter-row" span={8} xs={24} sm={12} xl={6} key={timer.id}>
               <Timer
                 timer={timer}
                 onChange={updateTimer}
