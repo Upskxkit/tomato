@@ -19,3 +19,32 @@ export function createNotification(title: string, body: string): Notification {
     body
   })
 }
+
+const timers = [
+  {
+    time_in_sec: 5,
+    title: 'Test2',
+    id: '1234567890'
+  },
+  {
+    time_in_sec: 600,
+    title: 'asd',
+    id: '1234567290'
+  }
+]
+
+ipcMain.handle('timers::get', () => {
+  return timers
+})
+
+/* ipcMain.on('timers::add', () => {
+  return timers
+})
+
+ipcMain.on('timers::update', () => {
+  return timers
+})
+
+ipcMain.on('timers::remove', () => {
+  return timers
+}) */
