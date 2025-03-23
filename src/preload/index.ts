@@ -1,5 +1,6 @@
 import { contextBridge, ipcRenderer } from 'electron'
 import { Timer, Backend, Notifications, Timers } from './types'
+import { NOTIFICATIONS } from '../constants'
 
 export const backend: Backend = {
   nodeVersion: async (msg: string): Promise<string> => await ipcRenderer.invoke('node-version', msg)
@@ -7,7 +8,7 @@ export const backend: Backend = {
 
 export const notifications: Notifications = {
   send: (title: string, body: string): void =>
-    ipcRenderer.send('notifications::show', `${title}::${body}`)
+    ipcRenderer.send(NOTIFICATIONS.SHOW, `${title}::${body}`)
 }
 
 export const timers: Timers = {
