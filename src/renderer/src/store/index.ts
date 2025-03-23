@@ -15,19 +15,17 @@ type TimersState = {
 }
 
 export const useTimersStore = create<TimersState>((set) => ({
-  timers: [
-    {
-      time_in_sec: 5,
-      title: 'Test',
-      id: '1234567890'
-    }
-  ],
+  timers: [],
   setTimers: (timers: Timer[]) => set(() => ({ timers: timers })),
-  updateTimer: (timer: Timer) =>
-    set((state) => ({ timers: state.timers.map((item) => (item.id === timer.id ? timer : item)) })),
-  addTimer: (timer: Timer) => set((state) => ({ timers: [...state.timers, { ...timer, id: Date.now().toString() }] })),
-  deleteTimer: (timer: Timer) =>
+  updateTimer: (timer: Timer) => {
+    set((state) => ({ timers: state.timers.map((item) => (item.id === timer.id ? timer : item)) }))
+  },
+  addTimer: (timer: Timer) => {
+    set((state) => ({ timers: [...state.timers, { ...timer, id: Date.now().toString() }] }))
+  },
+  deleteTimer: (timer: Timer) => {
     set((state) => ({ timers: state.timers.filter((item) => item.id !== timer.id) }))
+  }
 }))
 
 type TimerModalState = {
@@ -51,3 +49,19 @@ export const useTimerModalStore = create<TimerModalState>((set) => ({
       mode: timer ? 'edit' : 'create'
     }))
 }))
+
+export const useTimerContextMenuStore = create<{
+  openId: string | null
+  setOpenId: (id: string | null) => void
+}>((set) => ({
+  openId: null,
+  setOpenId: (id) => set({ openId: id })
+}))
+
+// Init timers
+window.timers.get().then((timers) => {
+  useTimersStore.setState((prev) => ({
+    ...prev,
+    timers: timers
+  }))
+})

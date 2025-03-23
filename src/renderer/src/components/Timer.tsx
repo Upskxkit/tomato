@@ -4,7 +4,7 @@ import { Progress } from 'antd'
 import { CaretRightOutlined, RollbackOutlined, PauseOutlined } from '@ant-design/icons'
 
 import TimerPopup from './TimerMenu'
-import { useTimerModalStore, Timer as TimerType } from '../store'
+import { useTimerModalStore, Timer as TimerType, useTimerContextMenuStore } from '../store'
 import { formatTime } from '../helpers/timer'
 
 export type TimerProps = {
@@ -23,9 +23,11 @@ export const Timer = (props: TimerProps) => {
   const [isRunning, setIsRunning] = useState(false)
   const [play, setPlay] = useState(false)
   const timer = useRef<NodeJS.Timeout | null>(null)
-  const [popup, setPopup] = useState({ visible: false, x: 0, y: 0 })
+  const [popup, setPopup] = useState({ x: 0, y: 0 })
 
   const timerModalOpen = useTimerModalStore((state) => state.open)
+  const setTimerModalContextId = useTimerContextMenuStore((state) => state.setOpenId)
+  const timerModalContextId = useTimerContextMenuStore((state) => state.openId)
 
   useEffect(() => {
     if (play) {
@@ -95,8 +97,8 @@ export const Timer = (props: TimerProps) => {
         ]}
         onContextMenu={(event) => {
           event.preventDefault()
+          setTimerModalContextId(props.timer.id ?? null)
           setPopup({
-            visible: true,
             x: event.clientX,
             y: event.clientY
           })
@@ -114,9 +116,11 @@ export const Timer = (props: TimerProps) => {
       </Card>
       <TimerPopup
         {...popup}
+        visible={props.timer.id === timerModalContextId}
         isRunning={isRunning}
         onClick={(event) => {
-          setPopup({ visible: false, x: 0, y: 0 })
+          setPopup({ x: 0, y: 0 })
+          setTimerModalContextId(null)
 
           if (event.key === 'edit') {
             timerModalOpen(props.timer)
@@ -124,7 +128,10 @@ export const Timer = (props: TimerProps) => {
             props.onDelete?.(props.timer)
           }
         }}
-        onClose={() => setPopup({ visible: false, x: 0, y: 0 })}
+        onClose={() => {
+          setTimerModalContextId(null)
+          setPopup({ x: 0, y: 0 })
+        }}
       />
     </>
   )
