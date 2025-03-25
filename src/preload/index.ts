@@ -1,6 +1,6 @@
 import { contextBridge, ipcRenderer } from 'electron'
-import { Timer, Backend, Notifications, Timers } from './types'
-import { NOTIFICATIONS } from '../constants'
+import { Timer, Backend, Notifications, Timers, Widget } from './types'
+import { NOTIFICATIONS, WIDGET } from '../constants'
 
 export const backend: Backend = {
   nodeVersion: async (msg: string): Promise<string> => await ipcRenderer.invoke('node-version', msg)
@@ -18,6 +18,11 @@ export const timers: Timers = {
   remove: (id: Timer['id']) => ipcRenderer.invoke('timers::remove', id)
 }
 
+export const widget: Widget = {
+  openWidget: (msg: string): void => ipcRenderer.send(WIDGET.OPEN_WIDGET, msg)
+}
+
 contextBridge.exposeInMainWorld('backend', backend)
 contextBridge.exposeInMainWorld('notify', notifications)
 contextBridge.exposeInMainWorld('timers', timers)
+contextBridge.exposeInMainWorld('widget', widget)

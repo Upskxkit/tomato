@@ -1,12 +1,13 @@
+/* eslint-disable @typescript-eslint/no-unused-vars */
 import { app, shell, BrowserWindow, ipcMain } from 'electron'
-import { Menu, MenuItem, globalShortcut, Notification } from 'electron'
+import { /* Menu, MenuItem, */ globalShortcut, Notification } from 'electron'
 
 import { join } from 'path'
 import { electronApp, optimizer, is } from '@electron-toolkit/utils'
 import icon from '../../resources/icon.png?asset'
-import './api'
+import { initAPI } from './api'
 
-function createWindow(): void {
+function createWindow() {
   // Create the browser window.
   const mainWindow = new BrowserWindow({
     width: 900,
@@ -46,7 +47,42 @@ function createWindow(): void {
   } else {
     mainWindow.loadFile(join(__dirname, '../renderer/index.html'))
   }
+
+  return mainWindow
 }
+
+function createTimerWindow() {
+  const timerWindow = new BrowserWindow({
+    width: 200,
+    height: 100,
+    frame: false,
+    transparent: true,
+    alwaysOnTop: true,
+    resizable: false,
+    skipTaskbar: true,
+    show: false,
+    webPreferences: {
+      nodeIntegration: false,
+      contextIsolation: true,
+      preload: join(__dirname, '../preload/index.js')
+    }
+  })
+
+  if (is.dev && process.env['ELECTRON_RENDERER_URL']) {
+    timerWindow.loadURL(process.env['ELECTRON_RENDERER_URL'] + '#timer')
+  } else {
+    timerWindow.loadFile(join(__dirname, '../renderer/index.html'), {
+      hash: 'timer'
+    })
+  }
+
+  timerWindow.setBackgroundColor('#00000000')
+
+  return timerWindow
+}
+
+let mainWindow
+let timerWindow
 
 // This method will be called when Electron has finished
 // initialization and is ready to create browser windows.
@@ -55,6 +91,15 @@ app.whenReady().then(() => {
   // Set app user model id for windows
   electronApp.setAppUserModelId('com.electron')
   createGlobalShortcut()
+  initAPI((data) => {
+    if (timerWindow.isVisible()) {
+      timerWindow.hide()
+      // mainWindow.show()
+    } else {
+      timerWindow.show()
+      // mainWindow.hide()
+    }
+  })
   // createMenu()
   // Default open or close DevTools by F12 in development
   // and ignore CommandOrControl + R in production.
@@ -66,7 +111,8 @@ app.whenReady().then(() => {
   // IPC test
   ipcMain.on('ping', () => console.log('pong'))
 
-  createWindow()
+  mainWindow = createWindow()
+  timerWindow = createTimerWindow()
 
   app.on('activate', function () {
     // On macOS it's common to re-create a window in the app when the
@@ -88,26 +134,25 @@ app.on('window-all-closed', () => {
 // code. You can also put them in separate files and require them here.
 
 // Utils
+// function createMenu(): void {
+//   const menu = new Menu()
+//   menu.append(
+//     new MenuItem({
+//       label: 'Electron',
+//       submenu: [
+//         {
+//           role: 'help',
+//           accelerator: process.platform === 'darwin' ? 'Alt+Cmd+I' : 'Alt+Shift+I',
+//           click: (): void => {
+//             console.log('Electron rocks!')
+//           }
+//         }
+//       ]
+//     })
+//   )
 
-function createMenu(): void {
-  const menu = new Menu()
-  menu.append(
-    new MenuItem({
-      label: 'Electron',
-      submenu: [
-        {
-          role: 'help',
-          accelerator: process.platform === 'darwin' ? 'Alt+Cmd+I' : 'Alt+Shift+I',
-          click: (): void => {
-            console.log('Electron rocks!')
-          }
-        }
-      ]
-    })
-  )
-
-  Menu.setApplicationMenu(menu)
-}
+//   Menu.setApplicationMenu(menu)
+// }
 
 function createGlobalShortcut(): void {
   globalShortcut.register('Alt+CommandOrControl+I', () => {

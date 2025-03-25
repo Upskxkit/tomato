@@ -2,8 +2,9 @@ import React, { useState } from 'react'
 import { ClockCircleOutlined } from '@ant-design/icons'
 import type { MenuProps } from 'antd'
 import { Layout, Menu, theme } from 'antd'
-import { BrowserRouter, Route, Routes } from 'react-router'
+import { BrowserRouter, HashRouter, Route, Routes } from 'react-router'
 import Timers from './page/Timers'
+import { TimerWidget } from './page/timer-widget'
 const { Header, Content, Footer, Sider } = Layout
 
 type MenuItem = Required<MenuProps>['items'][number]
@@ -31,32 +32,38 @@ const App: React.FC = () => {
   } = theme.useToken()
 
   return (
-    <Layout style={{ minHeight: '100vh', width: '100vw' }}>
-      <Sider collapsible collapsed={collapsed} onCollapse={(value) => setCollapsed(value)}>
-        <div className="demo-logo-vertical" />
-        <Menu theme="dark" defaultSelectedKeys={['1']} mode="inline" items={items} />
-      </Sider>
-      <Layout>
-        <Header style={{ padding: 0, background: colorBgContainer }} />
-        <Content style={{ margin: '16px' }}>
-          <div
-            style={{
-              padding: 24,
-              minHeight: 360,
-              background: colorBgContainer,
-              borderRadius: borderRadiusLG
-            }}
-          >
-            <BrowserRouter>
-              <Routes>
-                <Route path="/" element={<Timers />} />
-              </Routes>
-            </BrowserRouter>
-          </div>
-        </Content>
-        <Footer style={{ textAlign: 'center' }}>Tomato2</Footer>
-      </Layout>
-    </Layout>
+    <HashRouter>
+      <Routes>
+        <Route
+          path="/"
+          element={
+            <Layout style={{ minHeight: '100vh', width: '100vw' }}>
+              <Sider collapsible collapsed={collapsed} onCollapse={(value) => setCollapsed(value)}>
+                <div className="demo-logo-vertical" />
+                <Menu theme="dark" defaultSelectedKeys={['1']} mode="inline" items={items} />
+              </Sider>
+              <Layout>
+                <Header style={{ padding: 0, background: colorBgContainer }} />
+                <Content style={{ margin: '16px' }}>
+                  <div
+                    style={{
+                      padding: 24,
+                      minHeight: 360,
+                      background: colorBgContainer,
+                      borderRadius: borderRadiusLG
+                    }}
+                  >
+                    <Timers />
+                  </div>
+                </Content>
+                <Footer style={{ textAlign: 'center' }}>Tomato2</Footer>
+              </Layout>
+            </Layout>
+          }
+        />
+        <Route path="/timer" element={<TimerWidget />} />
+      </Routes>
+    </HashRouter>
   )
 }
 

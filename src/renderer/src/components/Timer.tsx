@@ -1,11 +1,15 @@
+import {
+  CaretRightOutlined,
+  ExportOutlined,
+  PauseOutlined,
+  RollbackOutlined
+} from '@ant-design/icons'
+import { Button, Card, Flex, Progress, Tooltip } from 'antd'
 import { useEffect, useRef, useState } from 'react'
-import { Button, Card, Tooltip, Flex } from 'antd'
-import { Progress } from 'antd'
-import { CaretRightOutlined, RollbackOutlined, PauseOutlined } from '@ant-design/icons'
-
-import TimerPopup from './TimerMenu'
-import { useTimerModalStore, Timer as TimerType, useTimerContextMenuStore } from '../store'
 import { formatTime } from '../helpers/timer'
+import { Timer as TimerType, useTimerContextMenuStore, useTimerModalStore } from '../store'
+import TimerPopup from './TimerMenu'
+import { openWidget } from '@renderer/helpers/widget'
 
 export type TimerProps = {
   timer: TimerType
@@ -65,7 +69,18 @@ export const Timer = (props: TimerProps) => {
         hoverable
         className="timer"
         title={props.timer.title}
-        extra={<a href="#">More</a>}
+        extra={
+          <div style={{ marginRight: '-16px' }}>
+            <Button
+              type="text"
+              shape="circle"
+              icon={<ExportOutlined />}
+              onClick={() => {
+                openWidget(props.timer)
+              }}
+            />
+          </div>
+        }
         actions={[
           <Tooltip key="btn-search" title="search">
             <Button

@@ -20,10 +20,15 @@ export interface Notifications {
   send: (title: string, body: string) => void
 }
 
+export interface Widget {
+  openWidget: (msg: string) => void
+}
+
 declare global {
   interface Window {
     backend: Backend
     notify: Notifications
     timers: Timers
+    widget: Widget
   }
 }
