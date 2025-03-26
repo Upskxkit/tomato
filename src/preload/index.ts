@@ -19,7 +19,9 @@ export const timers: Timers = {
 }
 
 export const widget: Widget = {
-  openWidget: (msg: string): void => ipcRenderer.send(WIDGET.OPEN_WIDGET, msg)
+  openWidget: (msg: string): void => ipcRenderer.send(WIDGET.OPEN_WIDGET, msg),
+  hideWidget: (msg: string): void => ipcRenderer.send(WIDGET.HIDE_WIDGET, msg),
+  closeWidget: (): void => ipcRenderer.send(WIDGET.CLOSE_WIDGET)
 }
 
 contextBridge.exposeInMainWorld('backend', backend)

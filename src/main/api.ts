@@ -1,10 +1,9 @@
-import { ipcMain, IpcMainInvokeEvent } from 'electron'
+import { BrowserWindow, ipcMain, IpcMainInvokeEvent } from 'electron'
 import { NOTIFICATIONS, WIDGET } from '../constants'
 import { createNotification } from './utils'
 
-export const initAPI = (callback) => {
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
-  ipcMain.handle('node-version', (_: IpcMainInvokeEvent): string => {
+export const initAPI = ({ main, widget }: { main: BrowserWindow; widget: BrowserWindow }) => {
+  ipcMain.handle('node-version', (): string => {
     return process.versions.node
   })
 
@@ -42,7 +41,22 @@ export const initAPI = (callback) => {
     return timers
   }) */
 
-  ipcMain.on(WIDGET.OPEN_WIDGET, (_, msg: string) => {
-    callback(msg)
+  ipcMain.on(WIDGET.OPEN_WIDGET, () => {
+    if (!widget.isVisible()) {
+      main.hide()
+      widget.show()
+    }
+  })
+
+  ipcMain.on(WIDGET.HIDE_WIDGET, () => {
+    if (widget.isVisible()) {
+      widget.hide()
+      main.show()
+    }
+  })
+
+  ipcMain.on(WIDGET.CLOSE_WIDGET, () => {
+    widget.close()
+    main.close()
   })
 }

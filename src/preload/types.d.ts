@@ -22,6 +22,8 @@ export interface Notifications {
 
 export interface Widget {
   openWidget: (msg: string) => void
+  closeWidget: () => void
+  hideWidget: (msg: string) => void
 }
 
 declare global {

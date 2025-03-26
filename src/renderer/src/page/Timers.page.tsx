@@ -5,7 +5,7 @@ import { useTimerModalStore, useTimersStore } from '@renderer/store'
 import { Col, Empty, FloatButton, Row } from 'antd'
 import { Timer } from '@renderer/components/Timer'
 
-export default function Timers() {
+export default function TimersPage() {
   const timers = useTimersStore((state) => state.timers)
   const addTimer = useTimersStore((state) => state.addTimer)
   const updateTimer = useTimersStore((state) => state.updateTimer)

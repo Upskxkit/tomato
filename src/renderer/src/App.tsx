@@ -2,9 +2,9 @@ import React, { useState } from 'react'
 import { ClockCircleOutlined } from '@ant-design/icons'
 import type { MenuProps } from 'antd'
 import { Layout, Menu, theme } from 'antd'
-import { BrowserRouter, HashRouter, Route, Routes } from 'react-router'
-import Timers from './page/Timers'
-import { TimerWidget } from './page/timer-widget'
+import { HashRouter, Route, Routes } from 'react-router'
+import TimersPage from './page/Timers.page'
+import TimerWidgetPage from './page/TimerWidget.page'
 const { Header, Content, Footer, Sider } = Layout
 
 type MenuItem = Required<MenuProps>['items'][number]
@@ -53,7 +53,7 @@ const App: React.FC = () => {
                       borderRadius: borderRadiusLG
                     }}
                   >
-                    <Timers />
+                    <TimersPage />
                   </div>
                 </Content>
                 <Footer style={{ textAlign: 'center' }}>Tomato2</Footer>
@@ -61,7 +61,7 @@ const App: React.FC = () => {
             </Layout>
           }
         />
-        <Route path="/timer" element={<TimerWidget />} />
+        <Route path="/timer" element={<TimerWidgetPage />} />
       </Routes>
     </HashRouter>
   )

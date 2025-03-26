@@ -36,7 +36,7 @@ function createWindow() {
 
   mainWindow.on('closed', () => {
     mainWindow.destroy()
-    timerWindow.destroy()
+    widgetWindow.destroy()
   })
 
   mainWindow.webContents.setWindowOpenHandler((details) => {
@@ -57,12 +57,12 @@ function createWindow() {
 
 function createTimerWindow() {
   const timerWindow = new BrowserWindow({
-    width: 200,
-    height: 100,
+    width: 220,
+    height: 150,
     frame: false,
     transparent: true,
     alwaysOnTop: true,
-    resizable: true,
+    resizable: false,
     skipTaskbar: true,
     show: false,
     webPreferences: {
@@ -91,7 +91,7 @@ function createTimerWindow() {
 }
 
 let mainWindow
-let timerWindow
+let widgetWindow
 
 // This method will be called when Electron has finished
 // initialization and is ready to create browser windows.
@@ -100,15 +100,6 @@ app.whenReady().then(() => {
   // Set app user model id for windows
   electronApp.setAppUserModelId('com.electron')
   createGlobalShortcut()
-  initAPI((data) => {
-    if (timerWindow.isVisible()) {
-      timerWindow.hide()
-      // mainWindow.show()
-    } else {
-      timerWindow.show()
-      // mainWindow.hide()
-    }
-  })
   // createMenu()
   // Default open or close DevTools by F12 in development
   // and ignore CommandOrControl + R in production.
@@ -117,11 +108,9 @@ app.whenReady().then(() => {
     optimizer.watchWindowShortcuts(window)
   })
 
-  // IPC test
-  ipcMain.on('ping', () => console.log('pong'))
-
   mainWindow = createWindow()
-  timerWindow = createTimerWindow()
+  widgetWindow = createTimerWindow()
+  initAPI({ main: mainWindow, widget: widgetWindow })
 
   app.on('activate', function () {
     // On macOS it's common to re-create a window in the app when the
