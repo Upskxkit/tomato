@@ -2,7 +2,7 @@ import { DeleteOutlined, EditOutlined } from '@ant-design/icons'
 import { Menu } from 'antd'
 import { MenuClickEventHandler } from 'rc-menu/lib/interface'
 import { useEffect, useRef } from 'react'
-import './TimerMenu.css'
+import './TimerContextMenu.css'
 
 interface TimerProps {
   visible: boolean
@@ -13,7 +13,7 @@ interface TimerProps {
   onClick: MenuClickEventHandler
 }
 
-export const TimerPopup = ({
+export const TimerContextMenu = ({
   visible,
   x,
   y,
@@ -60,4 +60,4 @@ export const TimerPopup = ({
   )
 }
 
-export default TimerPopup
+export default TimerContextMenu

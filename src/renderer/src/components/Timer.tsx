@@ -4,12 +4,12 @@ import {
   PauseOutlined,
   RollbackOutlined
 } from '@ant-design/icons'
-import { Button, Card, Flex, Progress, Tooltip } from 'antd'
-import { useEffect, useRef, useState } from 'react'
-import { formatTime } from '../helpers/timer'
-import { Timer as TimerType, useTimerContextMenuStore, useTimerModalStore } from '../store'
-import TimerPopup from './TimerMenu'
 import { openWidget } from '@renderer/helpers/widget'
+import { useTimer } from '@renderer/hooks/useTimer'
+import { Button, Card, Flex, Progress, Tooltip } from 'antd'
+import { useState } from 'react'
+import { Timer as TimerType, useTimerContextMenuStore, useTimerModalStore } from '../store'
+import TimerContextMenu from './TimerContextMenu'
 
 export type TimerProps = {
   timer: TimerType
@@ -19,49 +19,12 @@ export type TimerProps = {
 }
 
 export const Timer = (props: TimerProps) => {
-  const [timeLeft, setTimeLeft] = useState(props.timer.time_in_sec)
-  const [timerInfo, setTimerInfo] = useState({
-    percent: 100,
-    time: formatTime(props.timer.time_in_sec)
-  })
-  const [isRunning, setIsRunning] = useState(false)
-  const [play, setPlay] = useState(false)
-  const timer = useRef<NodeJS.Timeout | null>(null)
-  const [popup, setPopup] = useState({ x: 0, y: 0 })
-
+  const [contextMenuCoords, setContextMenuCoords] = useState({ x: 0, y: 0 })
   const timerModalOpen = useTimerModalStore((state) => state.open)
   const setTimerModalContextId = useTimerContextMenuStore((state) => state.setOpenId)
   const timerModalContextId = useTimerContextMenuStore((state) => state.openId)
-
-  useEffect(() => {
-    if (play) {
-      timer.current = setInterval(() => {
-        setTimeLeft((prev) => (prev < 1 ? 0 : prev - 1))
-      }, 1000)
-    }
-
-    return () => {
-      if (timer.current) clearInterval(timer.current)
-    }
-  }, [play])
-
-  useEffect(() => {
-    setTimerInfo({
-      percent: Math.floor((timeLeft / props.timer.time_in_sec) * 100),
-      time: formatTime(timeLeft)
-    })
-
-    if (timer.current && !timeLeft) {
-      clearInterval(timer.current)
-      setIsRunning(false)
-      setPlay(false)
-      props.onTimeOut?.()
-    }
-  }, [timeLeft, props.timer.time_in_sec])
-
-  useEffect(() => {
-    setTimeLeft(props.timer.time_in_sec)
-  }, [props.timer.time_in_sec])
+  const { timeLeft, setTimeLeft, isRunning, setIsRunning, play, setPlay, timerInfo } =
+    useTimer(props)
 
   return (
     <>
@@ -113,7 +76,7 @@ export const Timer = (props: TimerProps) => {
         onContextMenu={(event) => {
           event.preventDefault()
           setTimerModalContextId(props.timer.id ?? null)
-          setPopup({
+          setContextMenuCoords({
             x: event.clientX,
             y: event.clientY
           })
@@ -129,12 +92,12 @@ export const Timer = (props: TimerProps) => {
           />
         </Flex>
       </Card>
-      <TimerPopup
-        {...popup}
+      <TimerContextMenu
+        {...contextMenuCoords}
         visible={props.timer.id === timerModalContextId}
         isRunning={isRunning}
         onClick={(event) => {
-          setPopup({ x: 0, y: 0 })
+          setContextMenuCoords({ x: 0, y: 0 })
           setTimerModalContextId(null)
 
           if (event.key === 'edit') {
@@ -145,7 +108,7 @@ export const Timer = (props: TimerProps) => {
         }}
         onClose={() => {
           setTimerModalContextId(null)
-          setPopup({ x: 0, y: 0 })
+          setContextMenuCoords({ x: 0, y: 0 })
         }}
       />
     </>
