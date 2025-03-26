@@ -1,19 +1,10 @@
-import { ipcMain, IpcMainInvokeEvent, Notification } from 'electron'
+import { ipcMain, IpcMainInvokeEvent } from 'electron'
 import { NOTIFICATIONS, WIDGET } from '../constants'
-
-export function createNotification(title: string, body: string): Notification {
-  return new Notification({
-    title,
-    body,
-    sound: 'default'
-  })
-}
+import { createNotification } from './utils'
 
 export const initAPI = (callback) => {
-  ipcMain.handle('node-version', (event: IpcMainInvokeEvent, msg: string): string => {
-    console.log(event)
-    console.log(msg)
-
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
+  ipcMain.handle('node-version', (_: IpcMainInvokeEvent): string => {
     return process.versions.node
   })
 

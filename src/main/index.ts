@@ -8,7 +8,6 @@ import icon from '../../resources/icon.png?asset'
 import { initAPI } from './api'
 
 function createWindow() {
-  // Create the browser window.
   const mainWindow = new BrowserWindow({
     width: 900,
     height: 670,
@@ -35,6 +34,11 @@ function createWindow() {
     mainWindow.show()
   })
 
+  mainWindow.on('closed', () => {
+    mainWindow.destroy()
+    timerWindow.destroy()
+  })
+
   mainWindow.webContents.setWindowOpenHandler((details) => {
     shell.openExternal(details.url)
     return { action: 'deny' }
@@ -58,7 +62,7 @@ function createTimerWindow() {
     frame: false,
     transparent: true,
     alwaysOnTop: true,
-    resizable: false,
+    resizable: true,
     skipTaskbar: true,
     show: false,
     webPreferences: {
@@ -77,6 +81,11 @@ function createTimerWindow() {
   }
 
   timerWindow.setBackgroundColor('#00000000')
+
+  timerWindow.on('closed', () => {
+    mainWindow.destroy()
+    timerWindow.destroy()
+  })
 
   return timerWindow
 }
@@ -156,8 +165,6 @@ app.on('window-all-closed', () => {
 
 function createGlobalShortcut(): void {
   globalShortcut.register('Alt+CommandOrControl+I', () => {
-    console.log('Electron loves global shortcuts!')
-
     new Notification({
       title: 'Electron',
       body: 'This is a notification!'
