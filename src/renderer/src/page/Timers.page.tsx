@@ -4,12 +4,22 @@ import { notify } from '@renderer/helpers/notify'
 import { useTimerModalStore, useTimersStore } from '@renderer/store'
 import { Col, Empty, FloatButton, Row } from 'antd'
 import { Timer } from '@renderer/components/Timer'
+import { useEffect } from 'react'
 
 export default function TimersPage() {
   const timers = useTimersStore((state) => state.timers)
   const addTimer = useTimersStore((state) => state.addTimer)
   const updateTimer = useTimersStore((state) => state.updateTimer)
   const deleteTimer = useTimersStore((state) => state.deleteTimer)
+
+  useEffect(() => {
+    window.timers.get().then((timers) => {
+      useTimersStore.setState((prev) => ({
+        ...prev,
+        timers: timers
+      }))
+    })
+  }, [])
 
   const timerModalVisible = useTimerModalStore((state) => state.visible)
   const timerModalMode = useTimerModalStore((state) => state.mode)

@@ -15,7 +15,7 @@ export type TimerProps = {
   timer: TimerType
   onChange?: (props: TimerType) => void
   onDelete?: (props: TimerType) => void
-  onTimeOut?: () => void
+  onTimeOut: () => void
 }
 
 export const Timer = (props: TimerProps) => {
@@ -39,7 +39,8 @@ export const Timer = (props: TimerProps) => {
               shape="circle"
               icon={<ExportOutlined />}
               onClick={() => {
-                openWidget(props.timer)
+                setPlay((prev) => !prev)
+                openWidget(props.timer, timeLeft, pauseDate: new Date())
               }}
             />
           </div>

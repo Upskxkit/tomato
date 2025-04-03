@@ -24,6 +24,8 @@ export interface Widget {
   openWidget: (msg: string) => void
   closeWidget: () => void
   hideWidget: (msg: string) => void
+  onHideWidget(callback: (data: string) => void): void
+  onOpenWidget(callback: (data: string) => void): void
 }
 
 declare global {

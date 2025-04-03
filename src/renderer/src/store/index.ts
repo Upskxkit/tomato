@@ -59,9 +59,3 @@ export const useTimerContextMenuStore = create<{
 }))
 
 // Init timers
-window.timers.get().then((timers) => {
-  useTimersStore.setState((prev) => ({
-    ...prev,
-    timers: timers
-  }))
-})

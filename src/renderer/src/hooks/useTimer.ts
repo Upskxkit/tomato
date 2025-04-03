@@ -2,7 +2,7 @@ import { formatTime } from '@renderer/helpers/timer'
 import { Timer } from '@renderer/store'
 import { useState, useRef, useEffect } from 'react'
 
-export const useTimer = (props: { timer: Timer }) => {
+export const useTimer = (props: { timer: Timer; onTimeOut: () => void }) => {
   const [timeLeft, setTimeLeft] = useState(props.timer.time_in_sec)
   const [timerInfo, setTimerInfo] = useState({
     percent: 100,
@@ -34,7 +34,7 @@ export const useTimer = (props: { timer: Timer }) => {
       clearInterval(timer.current)
       setIsRunning(false)
       setPlay(false)
-      props.onTimeOut?.()
+      props.onTimeOut()
     }
   }, [timeLeft, props.timer.time_in_sec])
 

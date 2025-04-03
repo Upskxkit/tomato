@@ -21,6 +21,10 @@ export const timers: Timers = {
 export const widget: Widget = {
   openWidget: (msg: string): void => ipcRenderer.send(WIDGET.OPEN_WIDGET, msg),
   hideWidget: (msg: string): void => ipcRenderer.send(WIDGET.HIDE_WIDGET, msg),
+  onHideWidget: (callback: (data: string) => void) =>
+    ipcRenderer.on(WIDGET.ON_HIDE_WIDGET, (_event, value) => callback(value)),
+  onOpenWidget: (callback: (data: string) => void) =>
+    ipcRenderer.on(WIDGET.ON_OPEN_WIDGET, (_event, value) => callback(value)),
   closeWidget: (): void => ipcRenderer.send(WIDGET.CLOSE_WIDGET)
 }
 
