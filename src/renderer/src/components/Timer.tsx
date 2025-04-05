@@ -39,7 +39,7 @@ export const Timer = (props: TimerProps) => {
               shape="circle"
               icon={<ExportOutlined />}
               onClick={() => {
-                setPlay((prev) => !prev)
+                setPlay(false)
                 openWidget({
                   timer: props.timer,
                   timeLeft,
