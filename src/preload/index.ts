@@ -1,6 +1,6 @@
 import { contextBridge, ipcRenderer } from 'electron'
 import { Timer, Backend, Notifications, Timers, Widget } from './types'
-import { NOTIFICATIONS, WIDGET } from '../constants'
+import { NOTIFICATIONS, TIMERS, WIDGET } from '../constants'
 
 export const backend: Backend = {
   nodeVersion: async (msg: string): Promise<string> => await ipcRenderer.invoke('node-version', msg)
@@ -12,10 +12,10 @@ export const notifications: Notifications = {
 }
 
 export const timers: Timers = {
-  get: (): Promise<Timer[]> => ipcRenderer.invoke('timers::get'),
-  add: (timer: Timer) => ipcRenderer.invoke('timers::add', timer),
-  update: (timer: Omit<Timer, 'id'>) => ipcRenderer.invoke('timers::update', timer),
-  remove: (id: Timer['id']) => ipcRenderer.invoke('timers::remove', id)
+  get: (): Promise<Timer[]> => ipcRenderer.invoke(TIMERS.GET_TIMERS),
+  add: (timer: Timer) => ipcRenderer.invoke(TIMERS.ADD_TIMER, timer),
+  update: (timer: Omit<Timer, 'id'>) => ipcRenderer.invoke(TIMERS.UPDATE_TIMER, timer),
+  remove: (id: Timer['id']) => ipcRenderer.invoke(TIMERS.DELETE_TIMER, id)
 }
 
 export const widget: Widget = {

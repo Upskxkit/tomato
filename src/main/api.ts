@@ -1,6 +1,5 @@
 import { BrowserWindow, ipcMain, IpcMainInvokeEvent } from 'electron'
 import { NOTIFICATIONS, TIMERS, WIDGET } from '../constants'
-import { Timer } from '../preload/types'
 import { createNotification } from './utils'
 
 export const initAPI = ({ main, widget }: { main: BrowserWindow; widget: BrowserWindow }) => {
@@ -45,7 +44,7 @@ export const initAPI = ({ main, widget }: { main: BrowserWindow; widget: Browser
   ipcMain.on(WIDGET.OPEN_WIDGET, (_, data: string) => {
     if (!widget.isVisible()) {
       main.hide()
-      widget.webContents.send(TIMERS.ACTIVE_TIMER, data)
+      widget.webContents.send(WIDGET.ON_OPEN_WIDGET, data)
       widget.show()
     }
   })
@@ -53,7 +52,7 @@ export const initAPI = ({ main, widget }: { main: BrowserWindow; widget: Browser
   ipcMain.on(WIDGET.HIDE_WIDGET, (_, data: string) => {
     if (widget.isVisible()) {
       widget.hide()
-      main.webContents.send(TIMERS.ACTIVE_TIMER, data)
+      main.webContents.send(WIDGET.ON_HIDE_WIDGET, data)
       main.show()
     }
   })

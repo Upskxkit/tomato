@@ -5,8 +5,8 @@ export const formatTime = (seconds: number) => {
   return `${String(hours).padStart(2, '0')}:${String(minutes).padStart(2, '0')}:${String(secs).padStart(2, '0')}`
 }
 
-export const calcTimeLeft = (pauseDate: string, time_left: number) => {
-  const endDate = new Date(pauseDate)
+export const calcTimeLeft = (transitionDate: string, time_left: number) => {
+  const endDate = new Date(transitionDate)
   endDate.setSeconds(endDate.getSeconds() + time_left)
   const now = new Date()
 

@@ -5,6 +5,8 @@ import { Timer } from '../preload/types'
 
 const USER_DATA_PATH = path.join(app.getPath('userData'), 'user_data.json')
 const TIMER_DATA_PATH = path.join(app.getPath('userData'), 'timer_data.json')
+console.log('USER_DATA_PATH', USER_DATA_PATH)
+console.log('TIMER_DATA_PATH', TIMER_DATA_PATH)
 
 export async function readUserData() {
   try {

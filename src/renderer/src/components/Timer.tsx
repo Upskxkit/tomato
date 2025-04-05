@@ -40,7 +40,12 @@ export const Timer = (props: TimerProps) => {
               icon={<ExportOutlined />}
               onClick={() => {
                 setPlay((prev) => !prev)
-                openWidget(props.timer, timeLeft, pauseDate: new Date())
+                openWidget({
+                  timer: props.timer,
+                  timeLeft,
+                  transitionDate: new Date().toISOString(),
+                  play
+                })
               }}
             />
           </div>

@@ -1,20 +1,31 @@
 import TimerWidget from '@renderer/components/TimerWidget'
 import { notify } from '@renderer/helpers/notify'
-import { closeWidget, hideWidget } from '@renderer/helpers/widget'
-import { useTimersStore } from '@renderer/store'
+import { closeWidget, hideWidget, onOpenWidget } from '@renderer/helpers/widget'
+import { useEffect, useState } from 'react'
+import { Timer } from 'src/preload/types'
+import { Skeleton } from 'antd'
 
 export const TimerWidgetPage = () => {
-  const timers = useTimersStore((state) => state.timers)
+  const [timer, setTimer] = useState<null | Timer>(null)
+
+  useEffect(() => {
+    onOpenWidget((data) => {
+      setTimer(data.timer)
+    })
+  }, [])
+
+  if (!timer) {
+    return <Skeleton active />
+  }
+
   return (
     <TimerWidget
-      timer={timers[0]}
+      timer={timer}
       onTimeOut={() => {
         notify('Timeout', 'Your timer has timed out!')
       }}
       onClose={closeWidget}
-      onHide={(timer)=>{
-        hideWidget(timer)
-      }}
+      onHide={hideWidget}
     />
   )
 }

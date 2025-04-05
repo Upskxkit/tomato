@@ -1,6 +1,6 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
-import { app, shell, BrowserWindow, ipcMain } from 'electron'
-import { /* Menu, MenuItem, */ globalShortcut, Notification } from 'electron'
+import { app, shell, BrowserWindow } from 'electron'
+import { /* Menu, MenuItem, */ globalShortcut } from 'electron'
 
 import { join } from 'path'
 import { electronApp, optimizer, is } from '@electron-toolkit/utils'
@@ -154,9 +154,7 @@ app.on('window-all-closed', () => {
 
 function createGlobalShortcut(): void {
   globalShortcut.register('Alt+CommandOrControl+I', () => {
-    new Notification({
-      title: 'Electron',
-      body: 'This is a notification!'
-    }).show()
+    mainWindow.show()
+    widgetWindow.hide()
   })
 }

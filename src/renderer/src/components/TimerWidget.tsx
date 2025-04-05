@@ -9,10 +9,11 @@ import {
 import { useTimer } from '@renderer/hooks/useTimer'
 import { Button, Divider, Flex, Space, Tooltip, Typography } from 'antd'
 import { TimerProps } from './Timer'
+import { WidgetConfigParams } from '@renderer/helpers/widget'
 
 const TimerWidget = (
   props: Pick<TimerProps, 'timer' | 'onTimeOut'> & {
-    onHide: (timer: TimerProps['timer']) => void
+    onHide: (props: WidgetConfigParams) => void
     onClose: () => void
   }
 ) => {
@@ -22,17 +23,22 @@ const TimerWidget = (
   return (
     <>
       <Flex align="center" justify="space-between">
-        <div>
-          <span style={{ padding: '4px', ['WebkitAppRegion' as string]: 'drag' }}>
+        <Button
+          type="text"
+          icon={<ImportOutlined />}
+          onClick={() => {
+            props.onHide({
+              timer: props.timer,
+              timeLeft,
+              play,
+              transitionDate: new Date().toISOString()
+            })
+          }}
+        />
+        <div style={{ flexGrow: 1, textAlign: 'center', ['WebkitAppRegion' as string]: 'drag' }}>
+          <span>
             <HolderOutlined />
           </span>
-          <Button
-            type="text"
-            icon={<ImportOutlined />}
-            onClick={() => {
-              props.onHide(props.timer)
-            }}
-          />
         </div>
         <Button
           type="text"
