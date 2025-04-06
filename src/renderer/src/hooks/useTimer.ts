@@ -1,4 +1,4 @@
-import { calcTimeLeft, formatTime } from '@renderer/helpers/timer'
+import { formatTime } from '@renderer/helpers/timer'
 import { UpdatedState } from '@renderer/helpers/widget'
 import { Timer } from '@renderer/store'
 import { useState, useRef, useEffect, useCallback } from 'react'
