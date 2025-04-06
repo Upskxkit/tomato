@@ -7,6 +7,8 @@ export interface WidgetConfigParams {
   play: boolean
 }
 
+export type UpdatedState = Omit<WidgetConfigParams, 'timer'>
+
 export const openWidget = (props: WidgetConfigParams) => {
   window.widget.openWidget(JSON.stringify(props))
 }
@@ -21,24 +23,14 @@ export const hideWidget = (props: WidgetConfigParams) => {
 
 export const onHideWidget = (callback: (data: WidgetConfigParams) => void) => {
   window.widget.onHideWidget((data) => {
-    const parsedData = JSON.parse(data)
-    callback({
-      timer: parsedData.timer,
-      play: parsedData.isPlay,
-      timeLeft: parsedData.time_left,
-      transitionDate: parsedData.transitionDate
-    })
+    const parsedData = JSON.parse(data) as WidgetConfigParams
+    callback(parsedData)
   })
 }
 
 export const onOpenWidget = (callback: (data: WidgetConfigParams) => void) => {
   window.widget.onOpenWidget((data) => {
-    const parsedData = JSON.parse(data)
-    callback({
-      timer: parsedData.timer,
-      play: parsedData.isPlay,
-      timeLeft: parsedData.time_left,
-      transitionDate: parsedData.transitionDate
-    })
+    const parsedData = JSON.parse(data) as WidgetConfigParams
+    callback(parsedData)
   })
 }

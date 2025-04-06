@@ -1,16 +1,20 @@
 import { PlusOutlined } from '@ant-design/icons'
+import { Timer } from '@renderer/components/Timer'
 import TimerModal from '@renderer/components/TimerModal'
 import { notify } from '@renderer/helpers/notify'
+import { onHideWidget, UpdatedState } from '@renderer/helpers/widget'
 import { useTimerModalStore, useTimersStore } from '@renderer/store'
 import { Col, Empty, FloatButton, Row } from 'antd'
-import { Timer } from '@renderer/components/Timer'
-import { useEffect } from 'react'
+import { useEffect, useState } from 'react'
 
 export default function TimersPage() {
   const timers = useTimersStore((state) => state.timers)
   const addTimer = useTimersStore((state) => state.addTimer)
   const updateTimer = useTimersStore((state) => state.updateTimer)
   const deleteTimer = useTimersStore((state) => state.deleteTimer)
+  const [updatedState, setUpdatedState] = useState<(UpdatedState & { timerId: string }) | null>(
+    null
+  )
 
   useEffect(() => {
     window.timers.get().then((timers) => {
@@ -19,6 +23,19 @@ export default function TimersPage() {
         timers: timers
       }))
     })
+
+    onHideWidget((data) => {
+      setUpdatedState({
+        timerId: data.timer.id!,
+        timeLeft: data.timeLeft,
+        play: data.play,
+        transitionDate: data.transitionDate
+      })
+    })
+  }, [])
+
+  useEffect(() => {
+    // setUpdatedState()
   }, [])
 
   const timerModalVisible = useTimerModalStore((state) => state.visible)
@@ -46,6 +63,7 @@ export default function TimersPage() {
                 onTimeOut={() => {
                   notify('Timeout', 'Your timer has timed out!')
                 }}
+                updatedState={timer.id === updatedState?.timerId ? updatedState : null}
               />
             </Col>
           ))}

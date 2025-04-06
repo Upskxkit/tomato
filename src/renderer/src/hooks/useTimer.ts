@@ -1,6 +1,7 @@
-import { formatTime } from '@renderer/helpers/timer'
+import { calcTimeLeft, formatTime } from '@renderer/helpers/timer'
+import { UpdatedState } from '@renderer/helpers/widget'
 import { Timer } from '@renderer/store'
-import { useState, useRef, useEffect } from 'react'
+import { useState, useRef, useEffect, useCallback } from 'react'
 
 export const useTimer = (props: { timer: Timer; onTimeOut: () => void }) => {
   const [timeLeft, setTimeLeft] = useState(props.timer.time_in_sec)
@@ -11,6 +12,16 @@ export const useTimer = (props: { timer: Timer; onTimeOut: () => void }) => {
   const [isRunning, setIsRunning] = useState(false)
   const [play, setPlay] = useState(false)
   const timer = useRef<NodeJS.Timeout | null>(null)
+
+  const updateState = useCallback((data: UpdatedState): void => {
+    if (data.timeLeft) {
+      setTimeLeft(data.timeLeft)
+    }
+
+    if (data.play) {
+      setPlay(true)
+    }
+  }, [])
 
   useEffect(() => {
     if (play) {
@@ -25,6 +36,7 @@ export const useTimer = (props: { timer: Timer; onTimeOut: () => void }) => {
   }, [play])
 
   useEffect(() => {
+    console.log(timeLeft, formatTime(timeLeft))
     setTimerInfo({
       percent: Math.floor((timeLeft / props.timer.time_in_sec) * 100),
       time: formatTime(timeLeft)
@@ -38,10 +50,6 @@ export const useTimer = (props: { timer: Timer; onTimeOut: () => void }) => {
     }
   }, [timeLeft, props.timer.time_in_sec])
 
-  useEffect(() => {
-    setTimeLeft(props.timer.time_in_sec)
-  }, [props.timer.time_in_sec])
-
   return {
     timeLeft,
     setTimeLeft,
@@ -50,6 +58,7 @@ export const useTimer = (props: { timer: Timer; onTimeOut: () => void }) => {
     play,
     setPlay,
     timerInfo,
-    setTimerInfo
+    setTimerInfo,
+    updateState
   } as const
 }

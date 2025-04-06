@@ -44,6 +44,7 @@ export const initAPI = ({ main, widget }: { main: BrowserWindow; widget: Browser
   ipcMain.on(WIDGET.OPEN_WIDGET, (_, data: string) => {
     if (!widget.isVisible()) {
       main.hide()
+      console.log(data)
       widget.webContents.send(WIDGET.ON_OPEN_WIDGET, data)
       widget.show()
     }

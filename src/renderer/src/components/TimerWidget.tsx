@@ -9,16 +9,24 @@ import {
 import { useTimer } from '@renderer/hooks/useTimer'
 import { Button, Divider, Flex, Space, Tooltip, Typography } from 'antd'
 import { TimerProps } from './Timer'
-import { WidgetConfigParams } from '@renderer/helpers/widget'
+import { UpdatedState, WidgetConfigParams } from '@renderer/helpers/widget'
+import { useEffect } from 'react'
 
 const TimerWidget = (
   props: Pick<TimerProps, 'timer' | 'onTimeOut'> & {
     onHide: (props: WidgetConfigParams) => void
     onClose: () => void
+    updatedState: UpdatedState | null
   }
 ) => {
-  const { timeLeft, setTimeLeft, isRunning, setIsRunning, play, setPlay, timerInfo } =
+  const { timeLeft, setTimeLeft, isRunning, setIsRunning, play, setPlay, timerInfo, updateState } =
     useTimer(props)
+
+  useEffect(() => {
+    if (props.updatedState) {
+      updateState(props.updatedState)
+    }
+  }, [props.updatedState, updateState])
 
   return (
     <>
@@ -27,6 +35,7 @@ const TimerWidget = (
           type="text"
           icon={<ImportOutlined />}
           onClick={() => {
+            setPlay(false)
             props.onHide({
               timer: props.timer,
               timeLeft,

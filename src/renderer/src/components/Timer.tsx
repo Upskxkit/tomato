@@ -4,10 +4,10 @@ import {
   PauseOutlined,
   RollbackOutlined
 } from '@ant-design/icons'
-import { openWidget } from '@renderer/helpers/widget'
+import { openWidget, UpdatedState } from '@renderer/helpers/widget'
 import { useTimer } from '@renderer/hooks/useTimer'
 import { Button, Card, Flex, Progress, Tooltip } from 'antd'
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 import { Timer as TimerType, useTimerContextMenuStore, useTimerModalStore } from '../store'
 import TimerContextMenu from './TimerContextMenu'
 
@@ -16,6 +16,7 @@ export type TimerProps = {
   onChange?: (props: TimerType) => void
   onDelete?: (props: TimerType) => void
   onTimeOut: () => void
+  updatedState: UpdatedState | null
 }
 
 export const Timer = (props: TimerProps) => {
@@ -23,8 +24,14 @@ export const Timer = (props: TimerProps) => {
   const timerModalOpen = useTimerModalStore((state) => state.open)
   const setTimerModalContextId = useTimerContextMenuStore((state) => state.setOpenId)
   const timerModalContextId = useTimerContextMenuStore((state) => state.openId)
-  const { timeLeft, setTimeLeft, isRunning, setIsRunning, play, setPlay, timerInfo } =
+  const { timeLeft, setTimeLeft, isRunning, setIsRunning, play, setPlay, timerInfo, updateState } =
     useTimer(props)
+
+  useEffect(() => {
+    if (props.updatedState) {
+      updateState(props.updatedState)
+    }
+  }, [props.updatedState, updateState])
 
   return (
     <>
